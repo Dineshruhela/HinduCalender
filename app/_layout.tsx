@@ -4,6 +4,11 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useAppOpenAd } from '@/src/hooks/useAppOpenAd';
+import { getAdmob } from '@/src/utils/admobLoader';
+import { areNotificationsEnabled, requestPermission, scheduleAll } from '@/src/utils/notifications';
+import { useEffect } from 'react';
+import { Platform } from 'react-native';
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -11,6 +16,27 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  useAppOpenAd();
+
+  // Initialize AdMob once at app startup
+  useEffect(() => {
+    if (Platform.OS === 'web') return;
+    const admob = getAdmob();
+    if (!admob?.MobileAds) return;
+    admob.MobileAds().initialize().catch(() => { });
+  }, []);
+
+  // Initialize notifications: re-schedule if user had them enabled
+  useEffect(() => {
+    if (Platform.OS === 'web') return;
+    (async () => {
+      const enabled = await areNotificationsEnabled();
+      if (enabled) {
+        const granted = await requestPermission();
+        if (granted) await scheduleAll();
+      }
+    })();
+  }, []);
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "The Hindu Calender",
+    "name": "The Hindu Calendar",
     "slug": "HinduCalender",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -30,7 +30,7 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.hinducalendar.app",
       "config": {
-        "googleMobileAdsAppId": "ca-app-pub-3940256099942544~3347511713"
+        "googleMobileAdsAppId": "ca-app-pub-2203210311587761~4550738920"
       }
     },
     "web": {
@@ -54,8 +54,9 @@
       [
         "react-native-google-mobile-ads",
         {
-          "androidAppId": "ca-app-pub-3940256099942544~3347511713",
-          "iosAppId": "ca-app-pub-2203210311587761~8223154964"
+          "androidAppId": "ca-app-pub-2203210311587761~4550738920",
+          "iosAppId": "ca-app-pub-2203210311587761~8223154964",
+          "delayAppMeasurementInit": true
         }
       ],
       [

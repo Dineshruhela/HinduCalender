@@ -3,30 +3,32 @@
  *
  * Central ads configuration.
  * ─────────────────────────────────────────────────────────────────────────────
- * DEVELOPMENT:  Uses Google's official test Ad Unit IDs so you never
- *               accidentally serve real ads or get banned.
- * PRODUCTION:   Replace TEST_MODE = false and fill in your real IDs from
- *               Google AdMob console (admob.google.com).
+ * iOS:     Production IDs are active for banner & app-open.
+ *          Interstitial & rewarded still use test IDs until created in AdMob.
+ * Android: All test IDs (no production ad units created yet).
+ *          Update REAL_IDS.android + set ANDROID_TEST_MODE = false once ready.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
 import { Platform } from 'react-native';
 
-const TEST_MODE = false; // ← Production is now ACTIVE
+// Toggle per platform — flip to false once production ad unit IDs are set
+const IOS_TEST_MODE = false;
+const ANDROID_TEST_MODE = false;
 
 // ── Real Ad Unit IDs (fill these in before publishing) ──────────────────────
 const REAL_IDS = {
     ios: {
         banner: 'ca-app-pub-2203210311587761/7958955725',
-        interstitial: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',
-        rewarded: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',
+        interstitial: 'ca-app-pub-2203210311587761/2896748034',
+        rewarded: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',     // TODO: Create in AdMob
         appOpen: 'ca-app-pub-2203210311587761/5230160119',
     },
     android: {
-        banner: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',
-        interstitial: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',
-        rewarded: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',
-        appOpen: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',
+        banner: 'ca-app-pub-2203210311587761/8478375645',
+        interstitial: 'ca-app-pub-2203210311587761/8995252521',
+        rewarded: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',     // TODO: Create in AdMob
+        appOpen: 'ca-app-pub-2203210311587761/6004255545',
     },
 };
 
@@ -46,14 +48,27 @@ const TEST_IDS = {
     },
 };
 
-const ids = TEST_MODE ? TEST_IDS : REAL_IDS;
 const platform = Platform.OS === 'ios' ? 'ios' : 'android';
+const isTestMode = platform === 'ios' ? IOS_TEST_MODE : ANDROID_TEST_MODE;
 
-export const AdUnits = {
-    BANNER: ids[platform].banner,
-    INTERSTITIAL: ids[platform].interstitial,
-    REWARDED: ids[platform].rewarded,
-    APP_OPEN: ids[platform].appOpen,
+// For iOS: use real IDs where available, fall back to test IDs for placeholder entries
+const resolveIds = (real: Record<string, string>, test: Record<string, string>) => {
+    const resolved: Record<string, string> = {};
+    for (const key of Object.keys(real)) {
+        resolved[key] = real[key].includes('XXXXXXXX') ? test[key] : real[key];
+    }
+    return resolved;
 };
 
-export const IS_TEST_MODE = TEST_MODE;
+const ids = isTestMode
+    ? TEST_IDS[platform]
+    : resolveIds(REAL_IDS[platform], TEST_IDS[platform]);
+
+export const AdUnits = {
+    BANNER: ids.banner,
+    INTERSTITIAL: ids.interstitial,
+    REWARDED: ids.rewarded,
+    APP_OPEN: ids.appOpen,
+};
+
+export const IS_TEST_MODE = isTestMode;

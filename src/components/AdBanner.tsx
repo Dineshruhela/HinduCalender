@@ -20,13 +20,20 @@ export default function AdBanner({ size, style }: AdBannerProps) {
     if (!admob) return null;
 
     const { BannerAd, BannerAdSize } = admob;
+    // Fall back to BANNER, LEADERBOARD is too wide for mobile phones
     const adSize = size ?? BannerAdSize.BANNER;
+
+    // Auto-adjust if LEADERBOARD was requested but we're on mobile
+    const isTablet = Platform.OS === 'ios' && Platform.isPad;
+    const safeSize = (adSize === BannerAdSize.LEADERBOARD && !isTablet)
+        ? BannerAdSize.BANNER
+        : adSize;
 
     return (
         <View style={[{ alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }, style]}>
             <BannerAd
                 unitId={AdUnits.BANNER}
-                size={adSize}
+                size={safeSize}
                 requestOptions={{ requestNonPersonalizedAdsOnly: false }}
             />
         </View>

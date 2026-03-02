@@ -5,7 +5,7 @@ import { useInterstitialAd } from '@/src/hooks/useInterstitialAd';
 import { getUpcomingFestivals } from '@/src/utils/panchang';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useRef, useState } from 'react';
-import { Image, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 const FESTIVAL_BANNER = require('@/assets/images/festival_banner.png');
 const DIYA_ICON = require('@/assets/images/diya_icon.png');
@@ -30,14 +30,14 @@ export default function FestivalsScreen() {
     useEffect(() => {
         const fests = getUpcomingFestivals(90);
         setUpcomingFestivals(fests);
-        // Show interstitial once, 2s after screen loads
-        if (!hasShownAd.current) {
-            setTimeout(() => {
-                showInterstitial();
-                hasShownAd.current = true;
-            }, 2000);
-        }
     }, []);
+
+    const handleFestivalPress = (festName: string) => {
+        // Show ad 30% of the time on a meaningful interaction
+        if (Math.random() < 0.3) {
+            showInterstitial();
+        }
+    };
 
     return (
         <ScrollView style={[styles.container, { backgroundColor: theme.background }]} bounces={false}>
@@ -54,7 +54,7 @@ export default function FestivalsScreen() {
                     <View style={styles.heroContent}>
                         <Text style={styles.headerTitle}>Upcoming Festivals</Text>
                         <Text style={styles.headerHindi}>आगामी पर्व एवं त्योहार</Text>
-                        <Text style={styles.headerSub}>Next 90 days · Hindu Calendar 2026</Text>
+                        <Text style={styles.headerSub}>Next 90 days · Hindu Calendar {new Date().getFullYear()}</Text>
                     </View>
                 </LinearGradient>
             </View>
@@ -65,7 +65,14 @@ export default function FestivalsScreen() {
                     const catInfo = CATEGORIES[evt0?.category] || { emoji: '🎉', color: '#d97706' };
 
                     return (
-                        <View key={idx} style={[styles.festCard, { backgroundColor: theme.cardBackground }]}>
+                        <Pressable
+                            key={idx}
+                            style={({ pressed }) => [
+                                styles.festCard,
+                                { backgroundColor: theme.cardBackground, opacity: pressed ? 0.9 : 1 }
+                            ]}
+                            onPress={() => handleFestivalPress(evt0?.name)}
+                        >
                             {/* Date Badge */}
                             <View style={styles.dateBadgeWrapper}>
                                 <LinearGradient
@@ -113,7 +120,7 @@ export default function FestivalsScreen() {
                                     );
                                 })}
                             </View>
-                        </View>
+                        </Pressable>
                     );
                 })}
 

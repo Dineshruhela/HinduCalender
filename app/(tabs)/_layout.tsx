@@ -3,6 +3,7 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Tabs } from 'expo-router';
 import { Calendar as CalendarIcon, Home, PartyPopper } from 'lucide-react-native';
 import React from 'react';
+import { View } from 'react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -17,21 +18,33 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <Home size={28} color={color} />,
+          tabBarIcon: ({ color }) => (
+            <View pointerEvents="none">
+              <Home size={28} color={color} />
+            </View>
+          ),
         }}
       />
       <Tabs.Screen
         name="calendar"
         options={{
           title: 'Calendar',
-          tabBarIcon: ({ color }) => <CalendarIcon size={28} color={color} />,
+          tabBarIcon: ({ color }) => (
+            <View pointerEvents="none">
+              <CalendarIcon size={28} color={color} />
+            </View>
+          ),
         }}
       />
       <Tabs.Screen
         name="festivals"
         options={{
           title: 'Festivals',
-          tabBarIcon: ({ color }) => <PartyPopper size={28} color={color} />,
+          tabBarIcon: ({ color }) => (
+            <View pointerEvents="none">
+              <PartyPopper size={28} color={color} />
+            </View>
+          ),
         }}
       />
     </Tabs>

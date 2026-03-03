@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.hinducalendar.app",
+      "bundleIdentifier": "com.dineshruhela.hinducalendar",
       "buildNumber": "2",
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-2203210311587761~8223154964"
@@ -28,7 +28,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.hinducalendar.app",
+      "package": "com.dineshruhela.hinducalendar",
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-2203210311587761~4550738920"
       }

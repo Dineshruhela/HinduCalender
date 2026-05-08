@@ -13,8 +13,9 @@
 import { Platform } from 'react-native';
 
 // Toggle per platform — flip to false once production ad unit IDs are set
-const IOS_TEST_MODE = false;
-const ANDROID_TEST_MODE = false;
+// NOTE: Set back to false after 24-48 hours when AdMob ad units become active
+const IOS_TEST_MODE = true;  // ← TEMP: switched to test mode for verification
+const ANDROID_TEST_MODE = true; // ← TEMP: switched to test mode for verification
 
 // ── Real Ad Unit IDs (fill these in before publishing) ──────────────────────
 const REAL_IDS = {

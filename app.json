@@ -2,7 +2,7 @@
   "expo": {
     "name": "The Hindu Calendar",
     "slug": "HinduCalender",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "hinducalender",
@@ -29,6 +29,7 @@
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "com.dineshruhela.hinducalendar",
+      "versionCode": 2,
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-2203210311587761~4550738920"
       }

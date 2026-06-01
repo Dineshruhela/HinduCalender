@@ -16,7 +16,8 @@
         "googleMobileAdsAppId": "ca-app-pub-2203210311587761~8223154964"
       },
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSUserTrackingUsageDescription": "This identifier is used to deliver more relevant ads and keep The Hindu Calendar free."
       }
     },
     "android": {

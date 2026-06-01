@@ -3,13 +3,23 @@ import { getPanchangamDetails, Observer } from '@ishubhamx/panchangam-js';
 const DEFAULT_LAT = 28.6139;
 const DEFAULT_LNG = 77.2090;
 
-// ─── Module-level cache so the same date is never recalculated ───────────────
+// ─── Module-level cache so the same date and coordinates are never recalculated ───────────────
 const panchangCache = new Map<string, any>();
 
-const key = (date: Date) => date.toISOString().split('T')[0];
+const toLocalDateKey = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
+const key = (date: Date, lat: number, lng: number) => {
+    const dStr = toLocalDateKey(date);
+    return `${dStr}_${lat.toFixed(4)}_${lng.toFixed(4)}`;
+};
 
 export const getDailyPanchang = (date: Date, lat = DEFAULT_LAT, lng = DEFAULT_LNG) => {
-    const k = key(date);
+    const k = key(date, lat, lng);
     if (panchangCache.has(k)) return panchangCache.get(k);
     const observer = new Observer(lat, lng, 0);
     try {
@@ -17,6 +27,7 @@ export const getDailyPanchang = (date: Date, lat = DEFAULT_LAT, lng = DEFAULT_LN
         panchangCache.set(k, details);
         return details;
     } catch (error) {
+        console.error('Error calculating Panchangam details:', error);
         return null;
     }
 };
@@ -25,15 +36,15 @@ export const getDailyPanchang = (date: Date, lat = DEFAULT_LAT, lng = DEFAULT_LN
  * Async version — runs calculation on next tick so it never blocks the UI.
  * Resolves immediately from cache if already computed.
  */
-export const getDailyPanchangAsync = (date: Date): Promise<any> =>
+export const getDailyPanchangAsync = (date: Date, lat = DEFAULT_LAT, lng = DEFAULT_LNG): Promise<any> =>
     new Promise(resolve => {
-        const k = key(date);
+        const k = key(date, lat, lng);
         if (panchangCache.has(k)) {
             resolve(panchangCache.get(k));
             return;
         }
         // Defer heavy work off the render tick
-        setTimeout(() => resolve(getDailyPanchang(date)), 0);
+        setTimeout(() => resolve(getDailyPanchang(date, lat, lng)), 0);
     });
 
 /**
@@ -42,7 +53,9 @@ export const getDailyPanchangAsync = (date: Date): Promise<any> =>
  */
 export const getMonthFestivalsAsync = (
     year: number,
-    month: number
+    month: number,
+    lat = DEFAULT_LAT,
+    lng = DEFAULT_LNG
 ): Promise<{ date: string; events: any[] }[]> =>
     new Promise(resolve => {
         const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -53,9 +66,10 @@ export const getMonthFestivalsAsync = (
             const BATCH = 5; // process 5 days per tick
             for (let i = 0; i < BATCH && day <= daysInMonth; i++, day++) {
                 const date = new Date(year, month, day);
-                const details = getDailyPanchang(date);
+                const details = getDailyPanchang(date, lat, lng);
                 if (details?.festivals?.length) {
-                    results.push({ date: key(date), events: details.festivals });
+                    const dStr = toLocalDateKey(date);
+                    results.push({ date: dStr, events: details.festivals });
                 }
             }
             if (day <= daysInMonth) {
@@ -69,15 +83,16 @@ export const getMonthFestivalsAsync = (
         setTimeout(processBatch, 0);
     });
 
-export const getUpcomingFestivals = (days: number = 30) => {
+export const getUpcomingFestivals = (days: number = 90, lat = DEFAULT_LAT, lng = DEFAULT_LNG) => {
     const festivals: any[] = [];
     const today = new Date();
     for (let i = 0; i < days; i++) {
         const date = new Date(today);
         date.setDate(today.getDate() + i);
-        const details = getDailyPanchang(date);
+        const details = getDailyPanchang(date, lat, lng);
         if (details?.festivals?.length) {
-            festivals.push({ date: key(date), events: details.festivals });
+            const dStr = toLocalDateKey(date);
+            festivals.push({ date: dStr, events: details.festivals });
         }
     }
     return festivals;
@@ -155,6 +170,50 @@ export const NAKSHATRA_DATA = [
     { en: 'Revati', hi: 'रेवती' },
 ];
 
+export const YOGA_DATA = [
+    { en: 'Vishkumbha', hi: 'विष्कुम्भ' },
+    { en: 'Priti', hi: 'प्रीति' },
+    { en: 'Ayushman', hi: 'आयुष्मान' },
+    { en: 'Saubhagya', hi: 'सौभाग्य' },
+    { en: 'Shobhana', hi: 'शोभन' },
+    { en: 'Atiganda', hi: 'अतिगण्ड' },
+    { en: 'Sukarman', hi: 'सुकर्मा' },
+    { en: 'Dhriti', hi: 'धृति' },
+    { en: 'Shula', hi: 'शूल' },
+    { en: 'Ganda', hi: 'गण्ड' },
+    { en: 'Vriddhi', hi: 'वृद्धि' },
+    { en: 'Dhruva', hi: 'ध्रुव' },
+    { en: 'Vyaghata', hi: 'व्याघात' },
+    { en: 'Harshana', hi: 'हर्षण' },
+    { en: 'Vajra', hi: 'वज्र' },
+    { en: 'Siddhi', hi: 'सिद्धि' },
+    { en: 'Vyatipata', hi: 'व्यतीपात' },
+    { en: 'Variyana', hi: 'वरीयान' },
+    { en: 'Parigha', hi: 'परिघ' },
+    { en: 'Shiva', hi: 'शिव' },
+    { en: 'Siddha', hi: 'सिद्ध' },
+    { en: 'Sadhya', hi: 'साध्य' },
+    { en: 'Shubha', hi: 'शुभ' },
+    { en: 'Shukla', hi: 'शुक्ल' },
+    { en: 'Brahma', hi: 'ब्रह्म' },
+    { en: 'Indra', hi: 'इन्द्र' },
+    { en: 'Vaidhriti', hi: 'वैधृति' },
+];
+
+export const KARANA_HI: Record<string, string> = {
+    Bava: 'बव',
+    Balava: 'बालव',
+    Kaulava: 'कौलव',
+    Taitila: 'तैतिल',
+    Gara: 'गर',
+    Vanija: 'वणिज',
+    Vishti: 'विष्टि (भद्रा)',
+    Shakuni: 'शकुनि',
+    Chatushpada: 'चतुष्पद',
+    Naga: 'नाग',
+    Kimstughna: 'किंस्तुघ्न',
+};
+
 export const MASA_HI: Record<string, string> = {
     Chaitra: 'चैत्र',
     Vaishakha: 'वैशाख',
@@ -193,3 +252,7 @@ export const getTithiName = (idx: number) => (idx >= 1 && idx <= 30) ? TITHI_DAT
 export const getTithiHindi = (idx: number) => (idx >= 1 && idx <= 30) ? TITHI_DATA[idx - 1].hi : '—';
 export const getNakshatraName = (idx: number) => (idx >= 0 && idx < 27) ? NAKSHATRA_DATA[idx].en : '—';
 export const getNakshatraHindi = (idx: number) => (idx >= 0 && idx < 27) ? NAKSHATRA_DATA[idx].hi : '—';
+export const getYogaName = (idx: number) => (idx >= 1 && idx <= 27) ? YOGA_DATA[idx - 1].en : '—';
+export const getYogaHindi = (idx: number) => (idx >= 1 && idx <= 27) ? YOGA_DATA[idx - 1].hi : '—';
+export const getKaranaName = (name: string) => name || '—';
+export const getKaranaHindi = (name: string) => KARANA_HI[name] || name || '—';

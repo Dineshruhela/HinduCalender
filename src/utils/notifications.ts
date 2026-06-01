@@ -14,6 +14,7 @@
 
 import { Platform } from 'react-native';
 import { getDailyPanchang, getTithiName, getUpcomingFestivals } from './panchang';
+import { getLocationSettings } from './settings';
 
 const NOTIF_KEY = '@hindu_cal_notif_enabled';
 const DAYS_AHEAD = 60;
@@ -75,8 +76,9 @@ export async function scheduleAll(): Promise<void> {
     configureForeground();
     await N.cancelAllScheduledNotificationsAsync();
 
+    const loc = await getLocationSettings();
     const today = new Date();
-    const todayPanchang = getDailyPanchang(today);
+    const todayPanchang = getDailyPanchang(today, loc.latitude, loc.longitude);
     const festivalToday = todayPanchang?.festivals?.[0]?.name ?? null;
     const tithiName = todayPanchang ? getTithiName(todayPanchang.tithi) : '';
 
@@ -101,7 +103,7 @@ export async function scheduleAll(): Promise<void> {
     });
 
     // 2. Festival advance notices for the next DAYS_AHEAD days
-    const upcomingFestivals = getUpcomingFestivals(DAYS_AHEAD);
+    const upcomingFestivals = getUpcomingFestivals(DAYS_AHEAD, loc.latitude, loc.longitude);
     for (const day of upcomingFestivals) {
         const festDate = new Date(day.date);
         const festName = day.events[0]?.name ?? 'Hindu Festival';

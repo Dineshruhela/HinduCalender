@@ -1,7 +1,7 @@
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Tabs } from 'expo-router';
-import { Calendar as CalendarIcon, Home, PartyPopper } from 'lucide-react-native';
+import { Calendar as CalendarIcon, Home, PartyPopper, Sparkles } from 'lucide-react-native';
 import React from 'react';
 import { View } from 'react-native';
 
@@ -43,6 +43,17 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <View pointerEvents="none">
               <PartyPopper size={28} color={color} />
+            </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="kundli"
+        options={{
+          title: 'Kundli',
+          tabBarIcon: ({ color }) => (
+            <View pointerEvents="none">
+              <Sparkles size={28} color={color} />
             </View>
           ),
         }}

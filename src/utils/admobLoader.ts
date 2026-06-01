@@ -10,20 +10,34 @@
  * This module attempts the require ONCE and caches the result (null if it
  * failed). All consumers share the same cached value, so the module is
  * never required more than once.
+ *
+ * In Expo Go, TurboModuleRegistry.getEnforcing throws before JS try/catch can
+ * intercept it, so we check appOwnership first and bail out gracefully.
  */
 
-let _attempted = false;
-let _admob: any = null;
+import Constants from 'expo-constants';
+
+// Attach state to the global object to survive React Native Fast Refresh
+const globalAny = global as any;
 
 export function getAdmob(): any | null {
-    if (_attempted) return _admob;
-    _attempted = true;
-    try {
-        _admob = require('react-native-google-mobile-ads');
-    } catch {
-        _admob = null;
+    if (globalAny.__admobAttempted) return globalAny.__admobInstance;
+
+    globalAny.__admobAttempted = true;
+
+    // Expo Go does not bundle custom native modules. Bail out before the
+    // TurboModuleRegistry.getEnforcing call escapes try/catch.
+    if (Constants.appOwnership === 'expo') {
+        globalAny.__admobInstance = null;
+        return null;
     }
-    return _admob;
+
+    try {
+        globalAny.__admobInstance = require('react-native-google-mobile-ads');
+    } catch {
+        globalAny.__admobInstance = null;
+    }
+    return globalAny.__admobInstance;
 }
 
 export const isAdmobAvailable = (): boolean => {

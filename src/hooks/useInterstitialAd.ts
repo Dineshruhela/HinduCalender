@@ -4,6 +4,7 @@
  */
 
 import { getAdmob } from '@/src/utils/admobLoader';
+import { getAdRequestOptions, initializeAds } from '@/src/utils/adService';
 import { AdUnits } from '@/src/utils/ads';
 import { useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
@@ -15,32 +16,50 @@ export function useInterstitialAd() {
     useEffect(() => {
         if (Platform.OS === 'web') return;
 
-        const admob = getAdmob();
-        if (!admob) return; // AdMob not available (Expo Go or init failed)
+        let mounted = true;
+        let retryTimer: ReturnType<typeof setTimeout> | null = null;
 
-        const { InterstitialAd, AdEventType } = admob;
+        async function loadInterstitial() {
+            const adsState = await initializeAds();
+            if (!mounted || !adsState.canRequestAds) return;
 
-        const ad = InterstitialAd.createForAdRequest(AdUnits.INTERSTITIAL, {
-            requestNonPersonalizedAdsOnly: false,
-        });
-        adRef.current = ad;
+            const admob = getAdmob();
+            if (!admob) return; // AdMob not available (Expo Go or init failed)
 
-        const unsubLoaded = ad.addAdEventListener(AdEventType.LOADED, () => setLoaded(true));
-        const unsubClosed = ad.addAdEventListener(AdEventType.CLOSED, () => {
-            setLoaded(false);
+            const { InterstitialAd, AdEventType } = admob;
+
+            const ad = InterstitialAd.createForAdRequest(AdUnits.INTERSTITIAL, getAdRequestOptions());
+            adRef.current = ad;
+
+            const unsubLoaded = ad.addAdEventListener(AdEventType.LOADED, () => setLoaded(true));
+            const unsubClosed = ad.addAdEventListener(AdEventType.CLOSED, () => {
+                setLoaded(false);
+                ad.load();
+            });
+            const unsubError = ad.addAdEventListener(AdEventType.ERROR, () => {
+                setLoaded(false);
+                retryTimer = setTimeout(() => ad.load(), 30_000);
+            });
+
             ad.load();
-        });
-        const unsubError = ad.addAdEventListener(AdEventType.ERROR, () => {
-            setLoaded(false);
-            setTimeout(() => ad.load(), 30_000);
-        });
 
-        ad.load();
+            return () => {
+                unsubLoaded();
+                unsubClosed();
+                unsubError();
+                if (retryTimer) clearTimeout(retryTimer);
+            };
+        }
+
+        let cleanup: (() => void) | undefined;
+        loadInterstitial().then(unsubscribe => {
+            cleanup = unsubscribe;
+        });
 
         return () => {
-            unsubLoaded();
-            unsubClosed();
-            unsubError();
+            mounted = false;
+            cleanup?.();
+            if (retryTimer) clearTimeout(retryTimer);
         };
     }, []);
 

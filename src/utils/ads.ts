@@ -3,19 +3,17 @@
  *
  * Central ads configuration.
  * ─────────────────────────────────────────────────────────────────────────────
- * iOS:     Production IDs are active for banner & app-open.
- *          Interstitial & rewarded still use test IDs until created in AdMob.
- * Android: All test IDs (no production ad units created yet).
- *          Update REAL_IDS.android + set ANDROID_TEST_MODE = false once ready.
+ * Release builds use production IDs for banner, interstitial, and app-open
+ * ads on both iOS and Android. Rewarded ads intentionally fall back to
+ * Google's official test IDs until production rewarded units are created.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
 import { Platform } from 'react-native';
 
-// Toggle per platform — flip to false once production ad unit IDs are set
-// NOTE: Set back to false after 24-48 hours when AdMob ad units become active
-const IOS_TEST_MODE = false;  // ← TEMP: switched to test mode for verification
-const ANDROID_TEST_MODE = false; // ← TEMP: switched to test mode for verification
+// Dynamically enable test mode in development, and use production IDs in release builds
+const IOS_TEST_MODE = __DEV__;
+const ANDROID_TEST_MODE = __DEV__;
 
 // ── Real Ad Unit IDs (fill these in before publishing) ──────────────────────
 const REAL_IDS = {

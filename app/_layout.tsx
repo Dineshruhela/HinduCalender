@@ -5,7 +5,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useAppOpenAd } from '@/src/hooks/useAppOpenAd';
-import { getAdmob } from '@/src/utils/admobLoader';
+import { initializeAds } from '@/src/utils/adService';
 import { areNotificationsEnabled, requestPermission, scheduleAll } from '@/src/utils/notifications';
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
@@ -21,9 +21,7 @@ export default function RootLayout() {
   // Initialize AdMob once at app startup
   useEffect(() => {
     if (Platform.OS === 'web') return;
-    const admob = getAdmob();
-    if (!admob?.MobileAds) return;
-    admob.MobileAds().initialize().catch(() => { });
+    initializeAds().catch(() => { });
   }, []);
 
   // Initialize notifications: re-schedule if user had them enabled

@@ -4,6 +4,7 @@
  */
 
 import { getAdmob } from '@/src/utils/admobLoader';
+import { getAdRequestOptions, useAdsInitialization } from '@/src/utils/adService';
 import { AdUnits } from '@/src/utils/ads';
 import { Platform, View } from 'react-native';
 
@@ -14,14 +15,17 @@ interface AdBannerProps {
 }
 
 export default function AdBanner({ size, style }: AdBannerProps) {
+    const adsState = useAdsInitialization();
+
     if (Platform.OS === 'web') return null;
+    if (!adsState.canRequestAds) return null;
 
     const admob = getAdmob();
     if (!admob) return null;
 
     const { BannerAd, BannerAdSize } = admob;
-    // Fall back to BANNER, LEADERBOARD is too wide for mobile phones
-    const adSize = size ?? BannerAdSize.BANNER;
+    const requestedSize = size && BannerAdSize[size] ? BannerAdSize[size] : size;
+    const adSize = requestedSize ?? BannerAdSize.ANCHORED_ADAPTIVE_BANNER;
 
     // Auto-adjust if LEADERBOARD was requested but we're on mobile
     const isTablet = Platform.OS === 'ios' && Platform.isPad;
@@ -34,7 +38,7 @@ export default function AdBanner({ size, style }: AdBannerProps) {
             <BannerAd
                 unitId={AdUnits.BANNER}
                 size={safeSize}
-                requestOptions={{ requestNonPersonalizedAdsOnly: false }}
+                requestOptions={getAdRequestOptions()}
             />
         </View>
     );

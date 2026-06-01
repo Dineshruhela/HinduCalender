@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support – The Hindu Calendar</title>
+  <meta name="description" content="Support, FAQ, and contact for The Hindu Calendar app." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --saffron:  #d35400;
+      --deep:     #7C2D12;
+      --amber:    #b45309;
+      --gold:     #f59e0b;
+      --cream:    #fffbf5;
+      --text:     #1c1917;
+      --muted:    #78716c;
+      --border:   #e7e5e4;
+    }
+
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--cream); color: var(--text); line-height: 1.6; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,251,245,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between; height: 60px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-icon { width: 36px; height: 36px; border-radius: 9px; background: linear-gradient(135deg, var(--deep), var(--saffron)); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .nav-logo-text { font-weight: 700; font-size: 16px; color: var(--deep); }
+    .nav-links { display: flex; gap: 28px; }
+    .nav-links a { text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--saffron); }
+
+    .page-hero {
+      background: linear-gradient(135deg, var(--deep), var(--saffron));
+      color: #fff; padding: 56px 24px; text-align: center;
+    }
+    .page-hero h1 { font-size: clamp(28px, 5vw, 42px); font-weight: 800; margin-bottom: 10px; }
+    .page-hero p { font-size: 17px; opacity: 0.88; max-width: 480px; margin: 0 auto; }
+
+    .container { max-width: 760px; margin: 0 auto; padding: 56px 24px; }
+
+    /* FAQ */
+    .section-title { font-size: 22px; font-weight: 800; color: var(--deep); margin-bottom: 24px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+
+    details {
+      background: #fff; border: 1px solid var(--border); border-radius: 12px;
+      margin-bottom: 10px; overflow: hidden;
+    }
+    details[open] { box-shadow: 0 4px 16px rgba(124,45,18,.08); }
+    summary {
+      padding: 18px 20px; font-weight: 600; font-size: 15px; cursor: pointer;
+      list-style: none; display: flex; justify-content: space-between; align-items: center;
+      color: var(--text);
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: '+'; font-size: 20px; color: var(--saffron); font-weight: 400; flex-shrink: 0; }
+    details[open] summary::after { content: '−'; }
+    .faq-body { padding: 0 20px 18px; font-size: 14px; color: var(--muted); line-height: 1.65; }
+    .faq-body a { color: var(--saffron); }
+
+    /* CONTACT */
+    .contact-box {
+      background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 32px;
+      margin-top: 48px;
+    }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+    @media (max-width: 520px) { .contact-grid { grid-template-columns: 1fr; } }
+    .contact-item {
+      display: flex; gap: 14px; align-items: flex-start;
+      background: var(--cream); border-radius: 10px; padding: 16px;
+    }
+    .contact-item-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .contact-item-label { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+    .contact-item-value { font-size: 14px; font-weight: 600; color: var(--deep); }
+    .contact-item-value a { color: var(--saffron); text-decoration: none; }
+    .contact-item-value a:hover { text-decoration: underline; }
+
+    .response-note {
+      margin-top: 20px; font-size: 13px; color: var(--muted);
+      background: #fff8f0; border-left: 3px solid var(--gold); padding: 12px 16px; border-radius: 6px;
+    }
+
+    footer {
+      background: var(--deep); color: rgba(255,255,255,0.75);
+      padding: 40px 24px; text-align: center; margin-top: 64px;
+    }
+    footer a { color: var(--gold); text-decoration: none; font-weight: 500; }
+    .footer-links { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; font-size: 14px; }
+    .footer-copy { font-size: 13px; opacity: 0.6; }
+
+    @media (max-width: 600px) { .nav-links { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-logo-icon">🕉️</div>
+    <span class="nav-logo-text">The Hindu Calendar</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="support.html" class="active">Support</a>
+    <a href="privacy.html">Privacy</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <h1>Support</h1>
+  <p>Answers to common questions and ways to reach us.</p>
+</div>
+
+<div class="container">
+
+  <!-- FAQ -->
+  <h2 class="section-title">Frequently Asked Questions</h2>
+
+  <details>
+    <summary>Is The Hindu Calendar free?</summary>
+    <div class="faq-body">Yes, the app is completely free to download and use. It is supported by ads, which help keep all features accessible at no cost.</div>
+  </details>
+
+  <details>
+    <summary>Which platforms is the app available on?</summary>
+    <div class="faq-body">
+      The Hindu Calendar is available on both <strong>iOS (iPhone & iPad)</strong> and <strong>Android</strong>.
+      <br/><br/>
+      <a href="https://apps.apple.com/app/id6745056498" target="_blank" rel="noopener">Download on the App Store →</a><br/>
+      <a href="https://play.google.com/store/apps/details?id=com.dineshruhela.hinducalendar" target="_blank" rel="noopener">Get it on Google Play →</a>
+    </div>
+  </details>
+
+  <details>
+    <summary>What is Panchang?</summary>
+    <div class="faq-body">Panchang (पंचांग) is the traditional Hindu almanac. It covers five elements of the day: <strong>Tithi</strong> (lunar day), <strong>Nakshatra</strong> (lunar mansion), <strong>Yoga</strong>, <strong>Karana</strong>, and <strong>Var</strong> (weekday). Our app shows today's Panchang with sunrise, sunset, and moonrise times.</div>
+  </details>
+
+  <details>
+    <summary>How do I find Muhurta for an event?</summary>
+    <div class="faq-body">Open the app's <strong>Home</strong> tab and scroll to the <em>Muhurta</em> section. It lists today's auspicious time windows (Abhijit, Brahma Muhurta, etc.). Tap any entry for a detailed explanation.</div>
+  </details>
+
+  <details>
+    <summary>What is Choghadiya?</summary>
+    <div class="faq-body">Choghadiya (चौघड़िया) divides each day and night into eight time segments, each ruled by a planet and rated as auspicious (शुभ), inauspicious (अशुभ), or neutral. The app shows both day and night Choghadiya for each day.</div>
+  </details>
+
+  <details>
+    <summary>How do I generate a Kundli (birth chart)?</summary>
+    <div class="faq-body">Tap the <strong>Kundli</strong> tab at the bottom. Enter the birth date, time, and place of birth. The app will generate a Vedic birth chart with planetary positions. For Kundli Milan, switch to the <em>Milan</em> sub-tab and enter details for both individuals.</div>
+  </details>
+
+  <details>
+    <summary>The app is showing ads — can I remove them?</summary>
+    <div class="faq-body">Ads are how we keep the app free for everyone. There is no paid/premium plan currently. If ads are disrupting your experience, please <a href="mailto:dinesh.jony@gmail.com">contact us</a> and we'll look into it.</div>
+  </details>
+
+  <details>
+    <summary>The app is crashing or not loading. What should I do?</summary>
+    <div class="faq-body">
+      Please try the following steps:
+      <ol style="margin-top: 8px; padding-left: 20px; line-height: 2;">
+        <li>Close and reopen the app.</li>
+        <li>Restart your device.</li>
+        <li>Check for an app update in the App Store / Play Store.</li>
+        <li>Uninstall and reinstall the app (this does not delete any data).</li>
+      </ol>
+      If the problem persists, please <a href="mailto:dinesh.jony@gmail.com">email us</a> with your device model and OS version.
+    </div>
+  </details>
+
+  <details>
+    <summary>The festival dates seem incorrect. How are they calculated?</summary>
+    <div class="faq-body">Festival dates are calculated according to the traditional Hindu lunisolar calendar. Some regional variations exist (e.g. North vs. South India). If you notice a discrepancy, please email us with the festival name and the date you expected — we appreciate the feedback.</div>
+  </details>
+
+  <details>
+    <summary>How do I request a new feature or report a bug?</summary>
+    <div class="faq-body">We'd love to hear from you! Email us at <a href="mailto:dinesh.jony@gmail.com">dinesh.jony@gmail.com</a> with a description of the feature or bug. You can also leave a review on the App Store or Play Store.</div>
+  </details>
+
+  <!-- CONTACT -->
+  <div class="contact-box">
+    <h2 class="section-title" style="margin-top: 0;">Contact Us</h2>
+    <p style="font-size: 15px; color: var(--muted);">Can't find what you're looking for? Reach out directly — we usually respond within 1–2 business days.</p>
+
+    <div class="contact-grid">
+      <div class="contact-item">
+        <div class="contact-item-icon">✉️</div>
+        <div>
+          <div class="contact-item-label">Email</div>
+          <div class="contact-item-value"><a href="mailto:dinesh.jony@gmail.com">dinesh.jony@gmail.com</a></div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon">🍎</div>
+        <div>
+          <div class="contact-item-label">App Store</div>
+          <div class="contact-item-value"><a href="https://apps.apple.com/app/id6745056498" target="_blank" rel="noopener">Leave a review →</a></div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon">▶</div>
+        <div>
+          <div class="contact-item-label">Google Play</div>
+          <div class="contact-item-value"><a href="https://play.google.com/store/apps/details?id=com.dineshruhela.hinducalendar" target="_blank" rel="noopener">Leave a review →</a></div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon">🔒</div>
+        <div>
+          <div class="contact-item-label">Privacy</div>
+          <div class="contact-item-value"><a href="privacy.html">Privacy Policy →</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="response-note">
+      📬 We read every message. Response time is typically within 48 hours on working days.
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="support.html">Support</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="mailto:dinesh.jony@gmail.com">Contact</a>
+  </div>
+  <p class="footer-copy">© 2026 Dinesh Ruhela. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

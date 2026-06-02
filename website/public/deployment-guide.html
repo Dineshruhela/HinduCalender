@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deployment & Ads Guide – The Hindu Calendar</title>
+  <meta name="description" content="Complete guide to AdMob setup, production builds, and app store deployment for developers." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --saffron:  #d35400;
+      --deep:     #7C2D12;
+      --gold:     #f59e0b;
+      --cream:    #fffbf5;
+      --text:     #1c1917;
+      --muted:    #78716c;
+      --border:   #e7e5e4;
+      --code-bg:  #f5f3f0;
+    }
+
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--cream); color: var(--text); line-height: 1.7; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,251,245,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between; height: 60px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-icon { width: 36px; height: 36px; border-radius: 9px; background: linear-gradient(135deg, var(--deep), var(--saffron)); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .nav-logo-text { font-weight: 700; font-size: 16px; color: var(--deep); }
+    .nav-links { display: flex; gap: 28px; }
+    .nav-links a { text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--saffron); }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 48px 24px; }
+
+    h1 { font-size: 32px; font-weight: 800; color: var(--deep); margin-bottom: 8px; }
+    .subtitle { font-size: 16px; color: var(--muted); margin-bottom: 32px; }
+
+    h2 { font-size: 24px; font-weight: 700; color: var(--deep); margin: 40px 0 16px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
+    h3 { font-size: 18px; font-weight: 600; color: var(--saffron); margin: 24px 0 12px; }
+
+    p, li { font-size: 15px; color: #292524; margin-bottom: 10px; }
+    ul, ol { padding-left: 24px; margin-bottom: 16px; }
+    li { margin-bottom: 8px; }
+
+    a { color: var(--saffron); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    code {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: #7928ca;
+    }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+      margin: 16px 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    pre code { background: none; border: none; padding: 0; color: inherit; }
+
+    .highlight-box {
+      background: #fff; border-left: 4px solid var(--saffron);
+      border-radius: 8px; padding: 16px 20px; margin: 24px 0;
+      font-size: 14px; color: var(--muted);
+    }
+
+    table {
+      width: 100%; border-collapse: collapse;
+      margin: 24px 0; border: 1px solid var(--border);
+      border-radius: 8px; overflow: hidden;
+    }
+    thead { background: var(--code-bg); }
+    th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
+    th { font-weight: 600; color: var(--deep); }
+    tbody tr:hover { background: rgba(211,84,0,0.02); }
+
+    .toc {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 8px; padding: 20px;
+      margin: 32px 0;
+    }
+    .toc h3 { margin-top: 0; }
+    .toc ol { margin-left: 0; }
+    .toc li { margin-bottom: 6px; }
+    .toc a { text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+
+    .checklist {
+      background: #fff8f0; border: 1px solid #fde68a;
+      border-radius: 8px; padding: 16px;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    .checklist input[type="checkbox"] { margin-right: 8px; }
+
+    footer {
+      background: var(--deep); color: rgba(255,255,255,0.75);
+      padding: 40px 24px; text-align: center; margin-top: 64px;
+    }
+    footer a { color: var(--gold); }
+    .footer-links { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; font-size: 14px; }
+    .footer-copy { font-size: 13px; opacity: 0.6; }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      h1 { font-size: 24px; }
+      h2 { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">
+    <div class="nav-logo-icon">🕉️</div>
+    <span class="nav-logo-text">The Hindu Calendar</span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/support">Support</a>
+    <a href="/deployment-guide">Dev Docs</a>
+    <a href="/privacy">Privacy</a>
+  </div>
+</nav>
+
+<div class="container">
+  <h1>📚 Deployment & Ads Complete Guide</h1>
+  <p class="subtitle">For developers: AdMob setup, production builds, and app store submission</p>
+
+  <div class="highlight-box">
+    <strong>📖 This guide covers:</strong> AdMob account setup, creating ad units, configuring production builds with EAS, submitting to App Store Connect (iOS) and Google Play Console (Android), monitoring performance, and troubleshooting common issues.
+  </div>
+
+  <div class="toc">
+    <h3>Quick Navigation</h3>
+    <ol>
+      <li><a href="#admob-setup">AdMob Setup</a></li>
+      <li><a href="#app-config">App Configuration</a></li>
+      <li><a href="#production-builds">Production Build Process</a></li>
+      <li><a href="#ios-submission">iOS App Store Submission</a></li>
+      <li><a href="#android-submission">Android Google Play Submission</a></li>
+      <li><a href="#monitoring">Post-Launch Monitoring</a></li>
+      <li><a href="#troubleshooting">Troubleshooting</a></li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1 -->
+  <h2 id="admob-setup">1️⃣ AdMob Setup</h2>
+
+  <h3>Create AdMob Account</h3>
+  <ol>
+    <li>Go to <a href="https://admob.google.com" target="_blank">AdMob Console</a></li>
+    <li>Sign in with Google account</li>
+    <li>Click <strong>Get Started</strong></li>
+    <li>Accept terms and fill business details</li>
+  </ol>
+
+  <h3>Register Your Apps</h3>
+  <p><strong>For iOS:</strong></p>
+  <ol>
+    <li>Apps → Add App → Select iOS</li>
+    <li>Name: "The Hindu Calendar - iOS"</li>
+    <li>Bundle ID: <code>com.hinducalendar.app</code></li>
+    <li>Note your <strong>App ID</strong></li>
+  </ol>
+
+  <p><strong>For Android:</strong></p>
+  <ol>
+    <li>Apps → Add App → Select Android</li>
+    <li>Name: "The Hindu Calendar - Android"</li>
+    <li>Package: <code>com.dineshruhela.hinducalendar</code></li>
+    <li>Note your <strong>App ID</strong></li>
+  </ol>
+
+  <h3>Create Ad Units</h3>
+  <table>
+    <thead>
+      <tr><th>Type</th><th>Name</th><th>Platform</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Banner</strong></td><td>Home Screen Banner</td><td>iOS + Android</td></tr>
+      <tr><td><strong>Interstitial</strong></td><td>Screen Transitions</td><td>iOS + Android</td></tr>
+      <tr><td><strong>App Open</strong></td><td>App Launch</td><td>iOS + Android</td></tr>
+      <tr><td><strong>Rewarded</strong> (optional)</td><td>Festival Info</td><td>iOS + Android</td></tr>
+    </tbody>
+  </table>
+
+  <p>For each ad unit, copy the <strong>Ad Unit ID</strong> and add it to your code.</p>
+
+  <!-- SECTION 2 -->
+  <h2 id="app-config">2️⃣ App Configuration</h2>
+
+  <h3>Update app.json</h3>
+  <pre><code>{
+  "ios": {
+    "bundleIdentifier": "com.hinducalendar.app",
+    "config": {
+      "googleMobileAdsAppId": "ca-app-pub-XXXXXXXX~YYYYYYYY"
+    }
+  },
+  "android": {
+    "package": "com.dineshruhela.hinducalendar",
+    "config": {
+      "googleMobileAdsAppId": "ca-app-pub-XXXXXXXX~ZZZZZZZZ"
+    }
+  }
+}</code></pre>
+
+  <h3>Update src/utils/ads.ts</h3>
+  <p>Ensure all Ad Unit IDs are set to production values (no XXXXXXX).</p>
+
+  <!-- SECTION 3 -->
+  <h2 id="production-builds">3️⃣ Production Build Process</h2>
+
+  <h3>Build iOS</h3>
+  <pre><code>eas build --platform ios --profile production --non-interactive</code></pre>
+
+  <h3>Build Android</h3>
+  <pre><code>eas build --platform android --profile production --non-interactive</code></pre>
+
+  <h3>Monitor Status</h3>
+  <pre><code>eas build:list --limit 2</code></pre>
+
+  <div class="highlight-box">
+    💡 Builds typically take 30–60 minutes. You'll receive email notifications when complete.
+  </div>
+
+  <!-- SECTION 4 -->
+  <h2 id="ios-submission">4️⃣ iOS App Store Submission</h2>
+
+  <h3>Complete App Privacy</h3>
+  <ol>
+    <li>App Store Connect → App Privacy → Edit</li>
+    <li>Mark data used by ads:
+      <ul>
+        <li>✅ Identifiers → Purpose: Advertising</li>
+        <li>✅ Usage Data → Purpose: App Functionality</li>
+      </ul>
+    </li>
+    <li>Save</li>
+  </ol>
+
+  <h3>Submit for Review</h3>
+  <pre><code>eas submit --platform ios --latest --non-interactive</code></pre>
+
+  <p><strong>Or manually:</strong></p>
+  <ol>
+    <li>App Store Connect → Build section</li>
+    <li>Select your EAS build</li>
+    <li>Add release notes</li>
+    <li>Click <strong>Submit for Review</strong></li>
+  </ol>
+
+  <div class="highlight-box">
+    ⏱️ <strong>Expected time:</strong> 24–48 hours for review.
+  </div>
+
+  <!-- SECTION 5 -->
+  <h2 id="android-submission">5️⃣ Android Google Play Submission</h2>
+
+  <h3>Complete Data Safety</h3>
+  <ol>
+    <li>Google Play Console → Data safety</li>
+    <li>Mark data collected:
+      <ul>
+        <li>✅ Identifiers (Ad ID)</li>
+        <li>✅ Usage Data</li>
+      </ul>
+    </li>
+    <li>Save</li>
+  </ol>
+
+  <h3>Create Release</h3>
+  <ol>
+    <li>Release → Production → Create new release</li>
+    <li>Upload .aab file from EAS</li>
+    <li>Add release notes</li>
+    <li>Review and save</li>
+    <li>Click <strong>Roll out to production</strong></li>
+  </ol>
+
+  <div class="highlight-box">
+    ⚡ <strong>Expected time:</strong> 1–3 hours for review (usually faster than iOS).
+  </div>
+
+  <!-- SECTION 6 -->
+  <h2 id="monitoring">6️⃣ Post-Launch Monitoring</h2>
+
+  <h3>After 24 Hours</h3>
+  <ol>
+    <li>AdMob Console → Overview</li>
+    <li>Check:
+      <ul>
+        <li><strong>Impressions:</strong> Should be > 0</li>
+        <li><strong>Revenue:</strong> Initial earnings</li>
+        <li><strong>Fill rate:</strong> % of requests fulfilled</li>
+      </ul>
+    </li>
+  </ol>
+
+  <div class="highlight-box">
+    📊 <strong>Expect:</strong> Low activity initially. Ramps up as more users install. By week 1, aim for 50–200 impressions/day for a new app.
+  </div>
+
+  <!-- SECTION 7 -->
+  <h2 id="troubleshooting">7️⃣ Troubleshooting</h2>
+
+  <h3>Ads Not Showing</h3>
+  <ul>
+    <li><strong>Check:</strong> Bundle IDs match AdMob registration</li>
+    <li><strong>Wait:</strong> AdMob takes 24–48 hours to serve ads for new apps</li>
+    <li><strong>Rebuild:</strong> <code>eas build --platform ios --clear-cache --profile production</code></li>
+  </ul>
+
+  <h3>Build Fails</h3>
+  <ul>
+    <li><strong>Log in:</strong> <code>eas login</code></li>
+    <li><strong>Clear cache:</strong> <code>--clear-cache</code> flag</li>
+    <li><strong>Check logs:</strong> Click build ID in console</li>
+  </ul>
+
+  <h3>App Store Rejection</h3>
+  <ul>
+    <li>Review rejection email for specific reasons</li>
+    <li>Fix issue (usually ad placement or data disclosure)</li>
+    <li>Increment version, rebuild, resubmit</li>
+  </ul>
+
+  <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--border);">
+
+  <h3>Need Help?</h3>
+  <ul>
+    <li><a href="/support">Support page</a> for FAQs</li>
+    <li>Email: <a href="mailto:dinesh.jony@gmail.com">dinesh.jony@gmail.com</a></li>
+    <li><a href="https://docs.expo.dev/eas-update" target="_blank">EAS Build documentation</a></li>
+  </ul>
+
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/support">Support</a>
+    <a href="/deployment-guide">Dev Docs</a>
+    <a href="/privacy">Privacy</a>
+    <a href="mailto:dinesh.jony@gmail.com">Contact</a>
+  </div>
+  <p class="footer-copy">© 2026 Dinesh Ruhela. Developer resources for The Hindu Calendar.</p>
+</footer>
+
+</body>
+</html>

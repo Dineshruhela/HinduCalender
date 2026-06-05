@@ -7,21 +7,27 @@
   <meta name="description" content="The Hindu Calendar app – Daily Panchang, Rashifal, Hindu Festivals, Muhurta, Choghadiya and Kundli. Free on iOS and Android." />
   <meta property="og:title" content="The Hindu Calendar" />
   <meta property="og:description" content="Daily Panchang, Rashifal, Hindu Festivals, Muhurta & Kundli – all in one free app." />
+  <meta property="og:image" content="/icon.png" />
   <meta property="og:type" content="website" />
+  <link rel="icon" type="image/png" href="/icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --saffron:  #d35400;
+      --tint:     #D97706;
+      --saffron:  #D97706;
       --deep:     #7C2D12;
-      --amber:    #b45309;
-      --gold:     #f59e0b;
-      --cream:    #fffbf5;
-      --text:     #1c1917;
-      --muted:    #78716c;
-      --border:   #e7e5e4;
+      --amber:    #B45309;
+      --gold:     #F59E0B;
+      --cream:    #F9FAFB;
+      --text:     #1F2937;
+      --muted:    #6B7280;
+      --border:   #E5E7EB;
+      --card:     #FFFFFF;
+      --success:  #10B981;
+      --danger:   #EF4444;
     }
 
     body {
@@ -44,14 +50,26 @@
     .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
     .nav-logo-icon {
       width: 36px; height: 36px; border-radius: 9px;
-      background: linear-gradient(135deg, var(--deep), var(--saffron));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(124,45,18,0.25);
+      flex-shrink: 0;
     }
+    .nav-logo-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .nav-logo-text { font-weight: 700; font-size: 16px; color: var(--deep); }
     .nav-links { display: flex; gap: 28px; }
     .nav-links a { text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .2s; }
-    .nav-links a:hover { color: var(--saffron); }
+    .nav-links a:hover { color: var(--tint); }
+
+    /* ── HERO APP ICON ── */
+    .hero-icon-wrap {
+      width: 120px; height: 120px;
+      border-radius: 28px;
+      overflow: hidden;
+      margin: 0 auto 28px;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.4), 0 0 0 4px rgba(255,255,255,0.15);
+      position: relative; z-index: 1;
+    }
+    .hero-icon-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     /* ── HERO ── */
     .hero {
@@ -230,7 +248,7 @@
 <!-- NAV -->
 <nav>
   <a class="nav-logo" href="/">
-    <div class="nav-logo-icon">🕉️</div>
+    <div class="nav-logo-icon"><img src="/icon.png" alt="The Hindu Calendar App Icon" /></div>
     <span class="nav-logo-text">The Hindu Calendar</span>
   </a>
   <div class="nav-links">
@@ -243,6 +261,9 @@
 
 <!-- HERO -->
 <section class="hero">
+  <div class="hero-icon-wrap">
+    <img src="/icon.png" alt="The Hindu Calendar App Icon" />
+  </div>
   <div class="hero-badge">✨ Free App • iOS & Android</div>
   <h1>The Hindu Calendar</h1>
   <div class="hero-hindi">हिंदू पंचांग</div>

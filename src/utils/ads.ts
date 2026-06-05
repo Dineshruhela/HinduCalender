@@ -18,16 +18,16 @@ const ANDROID_TEST_MODE = __DEV__;
 // ── Real Ad Unit IDs (fill these in before publishing) ──────────────────────
 const REAL_IDS = {
     ios: {
-        banner: 'ca-app-pub-2203210311587761/7958955725',
-        interstitial: 'ca-app-pub-2203210311587761/2896748034',
-        rewarded: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',     // TODO: Create in AdMob
-        appOpen: 'ca-app-pub-2203210311587761/5230160119',
+        banner: 'ca-app-pub-2203210311587761/4551090882',
+        interstitial: 'ca-app-pub-2203210311587761/3338915719',
+        rewarded: 'ca-app-pub-2203210311587761/8651107678',     // TODO: Create in AdMob
+        appOpen: 'ca-app-pub-2203210311587761/2908660552',
     },
     android: {
-        banner: 'ca-app-pub-2203210311587761/8478375645',
-        interstitial: 'ca-app-pub-2203210311587761/8995252521',
-        rewarded: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',     // TODO: Create in AdMob
-        appOpen: 'ca-app-pub-2203210311587761/6004255545',
+        banner: 'ca-app-pub-2203210311587761/5390363980',
+        interstitial: 'ca-app-pub-2203210311587761/4077282311',
+        rewarded: 'ca-app-pub-2203210311587761/5942548237',     // TODO: Create in AdMob
+        appOpen: 'ca-app-pub-2203210311587761/3316384899',
     },
 };
 

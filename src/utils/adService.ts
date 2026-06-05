@@ -68,30 +68,55 @@ async function initializeNativeAds(): Promise<AdsInitState> {
         };
     }
 
-    const { AdsConsent, MaxAdContentRating, MobileAds } = admob;
+    const { AdsConsent, AdsConsentStatus, MaxAdContentRating, MobileAds } = admob;
 
     try {
-        const consentInfo = await AdsConsent.gatherConsent({
-            tagForUnderAgeOfConsent: false,
-        });
-
-        if (!consentInfo.canRequestAds) {
-            return {
-                status: 'blocked',
-                canRequestAds: false,
-                requestNonPersonalizedAdsOnly: true,
-            };
+        // Gather UMP consent info with a 5-second timeout so a slow SDK
+        // never prevents ads from loading (e.g. no internet, first launch).
+        let consentInfo: any = null;
+        try {
+            const consentPromise = AdsConsent.gatherConsent({
+                tagForUnderAgeOfConsent: false,
+            });
+            const timeoutPromise = new Promise<null>((resolve) =>
+                setTimeout(() => resolve(null), 5000)
+            );
+            consentInfo = await Promise.race([consentPromise, timeoutPromise]);
+        } catch {
+            // Consent gathering failed — treat as non-EEA, allow non-personalized ads
+            consentInfo = null;
         }
 
-        const [iosAllowsPersonalizedAds, userChoices] = await Promise.all([
-            getIosPersonalizedAdsAllowed(),
-            AdsConsent.getUserChoices?.().catch(() => null),
-        ]);
+        // For non-EEA regions (India, USA, etc.) the UMP SDK typically returns
+        // status = NOT_REQUIRED and canRequestAds = true.
+        // If consentInfo is null (timeout / error) or canRequestAds is explicitly
+        // false only when consent is REQUIRED, block. Otherwise allow with
+        // non-personalized ads as the safe default.
+        const consentStatus = consentInfo?.status;
+        const isConsentRequired =
+            AdsConsentStatus &&
+            consentStatus === AdsConsentStatus.REQUIRED;
+
+        if (isConsentRequired && consentInfo?.canRequestAds === false) {
+            // EEA user who hasn't consented yet — serve non-personalized as fallback.
+            // We don't hard-block; we still initialize MobileAds with NPA=true.
+        }
+
+        const iosAllowsPersonalizedAds = await getIosPersonalizedAdsAllowed().catch(() => false);
+        let userChoices: any = null;
+        try {
+            userChoices = await AdsConsent.getUserChoices?.();
+        } catch { /* ignore */ }
 
         const consentAllowsPersonalizedAds = userChoices?.selectPersonalisedAds !== false;
-        const requestNonPersonalizedAdsOnly = !(iosAllowsPersonalizedAds && consentAllowsPersonalizedAds);
-        const mobileAds = MobileAds();
+        // Default to non-personalized if we couldn't confirm personalized consent.
+        const requestNonPersonalizedAdsOnly = !(
+            iosAllowsPersonalizedAds &&
+            consentAllowsPersonalizedAds &&
+            !isConsentRequired
+        );
 
+        const mobileAds = MobileAds();
         await mobileAds.setRequestConfiguration({
             maxAdContentRating: MaxAdContentRating.PG,
             tagForChildDirectedTreatment: false,
@@ -105,12 +130,25 @@ async function initializeNativeAds(): Promise<AdsInitState> {
             requestNonPersonalizedAdsOnly,
         };
     } catch (error) {
-        return {
-            status: 'error',
-            canRequestAds: false,
-            requestNonPersonalizedAdsOnly: true,
-            error: error instanceof Error ? error.message : String(error),
-        };
+        // Even on error, attempt to initialize MobileAds so banner ads can
+        // still load (non-personalized). Only truly bail out if MobileAds
+        // itself throws during initialize().
+        try {
+            const mobileAds = MobileAds();
+            await mobileAds.initialize();
+            return {
+                status: 'ready',
+                canRequestAds: true,
+                requestNonPersonalizedAdsOnly: true,
+            };
+        } catch {
+            return {
+                status: 'error',
+                canRequestAds: false,
+                requestNonPersonalizedAdsOnly: true,
+                error: error instanceof Error ? error.message : String(error),
+            };
+        }
     }
 }
 

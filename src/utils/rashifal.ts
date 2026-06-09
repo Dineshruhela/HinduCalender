@@ -93,11 +93,11 @@ export function getDailyRashifal(rashiIdx: number, date: Date = new Date()): Ras
   const luckSeed = (rashiIdx * 3 + day + year) % LUCK_PREDICTIONS.length;
   const remedySeed = (rashiIdx + weekday) % REMEDIES.length;
 
-  // Star ratings out of 5 based on seeds
-  const healthRating = 3 + ((rashiIdx + day) % 3); // 3, 4, or 5 stars
-  const wealthRating = 3 + ((rashiIdx * 2 + weekday) % 3);
-  const loveRating = 3 + ((rashiIdx + month) % 3);
-  const luckRating = 3 + ((rashiIdx + day + weekday) % 3);
+  // Star ratings out of 5 based on seeds (2–5 range for realistic but not overly negative forecasts)
+  const healthRating = 2 + ((rashiIdx + day + month) % 4);
+  const wealthRating = 2 + ((rashiIdx * 2 + day + weekday) % 4);
+  const loveRating = 2 + ((rashiIdx + month + weekday * 2) % 4);
+  const luckRating = 2 + ((rashiIdx * 3 + day + weekday + month) % 4);
 
   const healthPred = HEALTH_PREDICTIONS[healthSeed];
   const wealthPred = WEALTH_PREDICTIONS[wealthSeed];

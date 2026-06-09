@@ -253,7 +253,8 @@ export default function HomeScreen() {
   const karanaHi = getKaranaHindi(karana);
 
   const isBhadraActive = karana === 'Vishti';
-  const isPanchakActive = panchang.moonRashi?.index === 10 || panchang.moonRashi?.index === 11;
+  const PANCHAK_RASHIS = new Set([0, 1, 2, 10, 11]);
+  const isPanchakActive = PANCHAK_RASHIS.has(panchang.moonRashi?.index);
 
   const masaHi = MASA_HI[masa?.name] || masa?.name;
   const pakshaHi = PAKSHA_HI[paksha] || paksha;

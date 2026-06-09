@@ -2,6 +2,7 @@ import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import AdBanner from '@/src/components/AdBanner';
 import { useInterstitialAd } from '@/src/hooks/useInterstitialAd';
+import { requestPermission, scheduleAll } from '@/src/utils/notifications';
 import { getUpcomingFestivals } from '@/src/utils/panchang';
 import {
     getLanguageSetting,
@@ -136,11 +137,21 @@ export default function FestivalsScreen() {
     }
   };
 
-  const handleSetReminder = () => {
+  const handleSetReminder = async () => {
+    const granted = await requestPermission();
+    if (!granted) {
+      Alert.alert(
+        'Permission Required',
+        'Please allow notifications in Settings to set festival reminders.',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+    await scheduleAll();
     Alert.alert(
-      '🔔 Reminder Configured',
-      `You will receive custom notifications for ${selectedEvent?.name} dynamic eve and morning calculations!`,
-      [{ text: 'Great' }]
+      '🔔 Reminder Set!',
+      `Festival alerts for ${selectedEvent?.name} and all upcoming festivals have been scheduled.\n\n• Day-of alert at 6:00 AM\n• Eve alert at 6:00 PM\n• 3-day advance notice at 9:00 AM`,
+      [{ text: 'Great!' }]
     );
   };
 
